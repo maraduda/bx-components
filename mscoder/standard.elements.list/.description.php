@@ -16,7 +16,7 @@ $arComponentDescription = array(
 		"SORT" => 10,
 		"CHILD" => array(
 			"ID" => 'standard',
-			"NAME" => GetMessage('STANDARD_ELEMENTS_LIST_DESCRIPTION_DIR'),
+			"NAME" => Loc::getMessage('STANDARD_ELEMENTS_LIST_DESCRIPTION_DIR'),
 			"SORT" => 10
 		)
 	),
