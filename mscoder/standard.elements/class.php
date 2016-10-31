@@ -26,11 +26,11 @@ class StandardElementsComponent extends \CBitrixComponent
 	 */
 	protected function setSefDefaultParams()
 	{
-		$this -> defaultUrlTemplates404 = array(
+		$this->defaultUrlTemplates404 = array(
 		    'index' => 'index.php',
 		    'detail' => 'detail/#ELEMENT_ID#/'
 		);
-		$this -> componentVariables = array('ELEMENT_ID');
+		$this->componentVariables = array('ELEMENT_ID');
 	}
 	
 	/**
@@ -39,39 +39,46 @@ class StandardElementsComponent extends \CBitrixComponent
 	protected function getResult()
 	{
 		$urlTemplates = array();
-		if ($this -> arParams['SEF_MODE'] == 'Y')
+		if ($this->arParams['SEF_MODE'] == 'Y')
 		{
-		    $variables = array();
-		    $urlTemplates = \CComponentEngine::MakeComponentUrlTemplates(
-		    	$this -> defaultUrlTemplates404, 
-		    	$this -> arParams['SEF_URL_TEMPLATES']
+			$variables = array();
+			$urlTemplates = \CComponentEngine::MakeComponentUrlTemplates(
+				$this->defaultUrlTemplates404,
+				$this->arParams['SEF_URL_TEMPLATES']
 			);
-		    $variableAliases = \CComponentEngine::MakeComponentVariableAliases(
-		    	$this -> defaultUrlTemplates404, 
-		    	$this -> arParams['VARIABLE_ALIASES']
+			$variableAliases = \CComponentEngine::MakeComponentVariableAliases(
+				$this->defaultUrlTemplates404,
+				$this->arParams['VARIABLE_ALIASES']
 			);
-		    $this -> page = \CComponentEngine::ParseComponentPath(
-		        $this -> arParams['SEF_FOLDER'],
-		        $urlTemplates,
-		        $variables
-		    );
+
+			$engine = new CComponentEngine($this);
+			if (CModule::IncludeModule('iblock'))
+			{
+				$engine->addGreedyPart("#SECTION_CODE_PATH#");
+				$engine->setResolveCallback(array("CIBlockFindTools", "resolveComponentEngine"));
+			}
+			$this->page = $engine->guessComponentPath(
+				$this->arParams['SEF_FOLDER'],
+				$urlTemplates,
+				$variables
+			);
 		
-		    if (strlen($this -> page) <= 0)
-		        $this -> page = 'index';
+		    if (strlen($this->page) <= 0)
+		        $this->page = 'index';
 		
 		    \CComponentEngine::InitComponentVariables(
-		    	$this -> page, 
-		    	$this -> componentVariables, $variableAliases, 
+		    	$this->page,
+		    	$this->componentVariables, $variableAliases,
 		    	$variables
 			);
 		}
 		else
 		{
-		    $this -> page = 'index';
+		    $this->page = 'index';
 		}
 		
-		$this -> arResult = array(
-		   'FOLDER' => $this -> arParams['SEF_FOLDER'],
+		$this->arResult = array(
+		   'FOLDER' => $this->arParams['SEF_FOLDER'],
 		   'URL_TEMPLATES' => $urlTemplates,
 		   'VARIABLES' => $variables,
 		   'ALIASES' => $variableAliases
@@ -85,13 +92,13 @@ class StandardElementsComponent extends \CBitrixComponent
 	{
 		try
 		{
-			$this -> setSefDefaultParams();
-			$this -> getResult();
-			$this -> includeComponentTemplate($this -> page);
+			$this->setSefDefaultParams();
+			$this->getResult();
+			$this->includeComponentTemplate($this->page);
 		}
 		catch (Exception $e)
 		{
-			ShowError($e -> getMessage());
+			ShowError($e->getMessage());
 		}
 	}
 }

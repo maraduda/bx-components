@@ -1,8 +1,8 @@
 <?
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 
-use \Bitrix\Main;
-use \Bitrix\Main\Localization\Loc as Loc;
+use Bitrix\Main;
+use Bitrix\Main\Localization\Loc as Loc;
 
 Loc::loadMessages(__FILE__); 
 
@@ -14,16 +14,18 @@ try
 	$iblockTypes = \CIBlockParameters::GetIBlockTypes(Array("-" => " "));
 	
 	$iblocks = array(0 => " ");
+    $iblocksCode = array("" => " ");
 	if (isset($arCurrentValues['IBLOCK_TYPE']) && strlen($arCurrentValues['IBLOCK_TYPE']))
 	{
 	    $filter = array(
 	        'TYPE' => $arCurrentValues['IBLOCK_TYPE'],
 	        'ACTIVE' => 'Y'
 	    );
-	    $rsIBlock = \CIBlock::GetList(array('SORT' => 'ASC'), $filter);
-	    while ($arIBlock = $rsIBlock -> GetNext())
+	    $iterator = \CIBlock::GetList(array('SORT' => 'ASC'), $filter);
+	    while ($iblock = $iterator->GetNext())
 	    {
-	        $iblocks[$arIBlock['ID']] = $arIBlock['NAME'];
+	        $iblocks[$iblock['ID']] = $iblock['NAME'];
+            $iblocksCode[$iblock['CODE']] = $iblock['NAME'];
 	    }
 	}
 	
@@ -57,6 +59,12 @@ try
 				'TYPE' => 'LIST',
 				'VALUES' => $iblocks
 			),
+            'IBLOCK_CODE' => array(
+                'PARENT' => 'BASE',
+                'NAME' => Loc::getMessage('STANDARD_ELEMENTS_LIST_PARAMETERS_IBLOCK_CODE'),
+                'TYPE' => 'LIST',
+                'VALUES' => $iblocksCode
+            ),
 			'SHOW_NAV' => array(
 				'PARENT' => 'BASE',
 				'NAME' => Loc::getMessage('STANDARD_ELEMENTS_LIST_PARAMETERS_SHOW_NAV'),
@@ -101,6 +109,6 @@ try
 }
 catch (Main\LoaderException $e)
 {
-	ShowError($e -> getMessage());
+	ShowError($e->getMessage());
 }
 ?>

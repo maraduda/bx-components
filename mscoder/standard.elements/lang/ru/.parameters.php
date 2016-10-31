@@ -16,4 +16,5 @@ $MESS['STANDARD_ELEMENTS_PARAMETERS_SORT_FIELD2'] = 'Поле второй со�
 $MESS['STANDARD_ELEMENTS_PARAMETERS_SORT_DIRECTION2'] = 'Направление второй сортировки';
 $MESS['STANDARD_ELEMENTS_PARAMETERS_INDEX_PAGE'] = 'Страница со списком элементов';
 $MESS['STANDARD_ELEMENTS_PARAMETERS_DETAIL_PAGE'] = 'Страница с детальным описанием элемента';
+$MESS['STANDARD_ELEMENTS_PARAMETERS_IBLOCK_CODE'] = 'Код инфоблока';
 ?>
